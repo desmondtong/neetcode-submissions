@@ -1,0 +1,66 @@
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @param {number} target
+     * @return {number}
+     */
+    search(nums, target) {
+        // for length 1 and 2
+
+        // find cut point
+        let l = 0;
+        let r = nums.length - 1;
+        let m = Math.ceil((l + r) / 2);
+        // console.log({ l, m, r });
+        let cutPoint = 0;
+        while (l < r) {
+            if (nums[l] < nums[m] && nums[m] < nums[r]) {
+                cutPoint = l;
+                break;
+            }
+            if (l == m || m == r) {
+                if (l == m) cutPoint = nums[l] < nums[m] ? l : m;
+                if (m == r) cutPoint = nums[r] < nums[m] ? r : m;
+                break;
+            }
+
+            if (nums[m] > nums[r]) {
+                // cut point is here
+                l = m;
+                m = Math.ceil((l + r) / 2);
+                // console.log({ l, m, r });
+            } else if (nums[l] > nums[m]) {
+                // cut point is here
+                r = m;
+                m = Math.ceil((l + r) / 2);
+            }
+        }
+        // console.log({ cutPoint });
+
+        // choose segment
+        l = 0;
+        r = nums.length - 1;
+
+        if (target >= nums[cutPoint] && target <= nums[r]) {
+            l = cutPoint;
+        } else {
+            r = cutPoint - 1;
+        }
+
+        // find target
+        console.log("find target:", { l, m, r });
+        while (l <= r) {
+            m = Math.floor((l + r) / 2);
+
+            if (target == nums[m]) return m;
+
+            if (target > nums[m]) {
+                l = m + 1;
+            } else {
+                r = m - 1;
+            }
+        }
+
+        return -1;
+    }
+}
